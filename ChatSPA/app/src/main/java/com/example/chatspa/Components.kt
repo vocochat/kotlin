@@ -1,6 +1,13 @@
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -27,16 +34,57 @@ fun ChatMessages(
     expandedImageUrl: String?,
     onImageClick: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier.weight(1f),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) {
-        items(messages) { message ->
-            ChatMessageItem(
-                message = message,
-                isExpanded = message.imageUrl == expandedImageUrl,
-                onImageClick = onImageClick
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(messages) { message ->
+                ChatMessageItem(
+                    message = message,
+                    isExpanded = message.imageUrl == expandedImageUrl,
+                    onImageClick = onImageClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ChatMessageItem(
+    message: ChatMessage,
+    isExpanded: Boolean,
+    onImageClick: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(
+                text = message.text,
+                style = MaterialTheme.typography.bodyLarge
             )
+            message.imageUrl?.let { imageUrl ->
+                // In a real app, you would implement image loading here
+                // For now, we'll just show a placeholder
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (isExpanded) 200.dp else 100.dp)
+                ) {
+                    Text("Image placeholder: $imageUrl")
+                }
+            }
         }
     }
 }
